@@ -1,0 +1,86 @@
+previewsEnabled: true
+previewsExpireAfterDays: 1
+services:
+  # Production backend
+  - type: web
+    name: prosperamdb-backend
+    env: node
+    plan: starter
+    previewPlan: starter
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /
+    numInstances: 2
+    domains:
+      - prosperamdb-backend.sergeylukin.com
+    envVars:
+      - key: NODE_VERSION
+        value: 12.18.4
+      - key: NODE_ENV
+        value: production
+        previewValue: staging
+      - key: ADMIN_USER
+        value: Admin
+        previewValue: QA
+      - key: ADMIN_PASS
+        value: admin
+        previewValue: qa
+      - key: ADMIN_EMAIL
+        value: admin@example.com
+        previewValue: qa@example.com
+      - key: DATABASE_CLIENT
+        value: postgres
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: prosperamdb-postgres
+          property: database
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: prosperamdb-postgres
+          property: host
+      - key: DATABASE_PORT
+        fromDatabase:
+          name: prosperamdb-postgres
+          property: port
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: prosperamdb-postgres
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: prosperamdb-postgres
+          property: password
+      - key: OMDB_API_KEY
+        value: 571bff74
+        previewValue: c21b2407
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+  # Production frontend
+  - type: web
+    name: prosperamdb-frontend
+    env: static
+    domains:
+      - prosperamdb.sergeylukin.com
+    envVars:
+      - key: NODE_VERSION
+        value: 12.18.4
+      - key: NODE_ENV
+        value: production
+      - key: GATSBY_BACKEND_URL
+        value: https://prosperamdb-backend.sergeylukin.com
+        previewValue: https://prosperamdb-backend-pr-1.onrender.com
+    routes:
+      - type: rewrite
+        source: /title/*/
+        destination: /title/
+    buildCommand: cd frontend && npm install && ./scripts/wait-for-it.sh prosperamdb-backend-pr-1.onrender.com:80 -- npm run build
+    staticPublishPath: ./frontend/public
+
+databases:
+  - name: prosperamdb-postgres
+    databaseName: prosperamdb
+    ipAllowList: []
+    plan: starter
+    previewPlan: starter

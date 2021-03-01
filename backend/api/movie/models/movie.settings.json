@@ -1,0 +1,95 @@
+{
+  "kind": "collectionType",
+  "collectionName": "movies",
+  "info": {
+    "name": "Movie",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "year": {
+      "type": "integer"
+    },
+    "rated": {
+      "type": "string"
+    },
+    "released": {
+      "type": "string"
+    },
+    "runtime": {
+      "type": "string"
+    },
+    "genre": {
+      "type": "text"
+    },
+    "director": {
+      "type": "text"
+    },
+    "writer": {
+      "type": "text"
+    },
+    "actors": {
+      "type": "text"
+    },
+    "plot": {
+      "type": "text"
+    },
+    "imdbRating": {
+      "type": "decimal"
+    },
+    "imdbID": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "string"
+    },
+    "fetchDataFromRemote": {
+      "type": "boolean"
+    },
+    "language": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "awards": {
+      "type": "string"
+    },
+    "poster": {
+      "type": "text"
+    },
+    "metascore": {
+      "type": "string"
+    },
+    "imdbVotes": {
+      "type": "biginteger"
+    },
+    "type": {
+      "type": "string"
+    },
+    "DVD": {
+      "type": "string"
+    },
+    "boxOffice": {
+      "type": "string"
+    },
+    "production": {
+      "type": "string"
+    },
+    "website": {
+      "type": "text"
+    },
+    "response": {
+      "type": "boolean"
+    }
+  }
+}

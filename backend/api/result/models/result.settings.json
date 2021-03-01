@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "results",
+  "info": {
+    "name": "result"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "imdbID": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "year": {
+      "type": "string"
+    },
+    "poster": {
+      "type": "text"
+    },
+    "type": {
+      "type": "string"
+    },
+    "searches": {
+      "collection": "search",
+      "via": "results",
+      "dominant": true
+    }
+  }
+}

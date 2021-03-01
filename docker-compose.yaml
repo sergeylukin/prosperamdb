@@ -1,0 +1,61 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: prosperamdb-frontend
+    working_dir: /app
+    command: ["./scripts/wait-for-it.sh", "prosperamdb-backend:1337", "--", "./scripts/entrypoint.sh"]
+    environment:
+      GATSBY_BACKEND_URL: ${GATSBY_BACKEND_URL}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: prosperamdb-backend
+    working_dir: /srv/app
+    entrypoint: "./entrypoint.sh"
+    env_file: .env
+    environment:
+      NODE_ENV: development
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASS: ${ADMIN_PASS}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      OMDB_API_KEY: ${OMDB_API_KEY}
+    volumes:
+      - ./backend:/srv/app
+    ports:
+        # 1337 is REST API and GraphQL server
+      - '1337:1337'
+        # 1338 is webpack-powered live-reloading endpoint
+        # if you don't need that just use 1337 instead
+        # and replace `strapi develop --watch-admin` with `strapi start`
+        # in entrypoint.sh to avoid rebuilding frontend assets on every source file change
+      - '1338:1338'
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    container_name: prosperamdb-postgres
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./data:/var/lib/postgresql/data

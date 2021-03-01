@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "searches",
+  "info": {
+    "name": "search"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "query": {
+      "type": "string"
+    },
+    "lastSyncDateTime": {
+      "type": "datetime"
+    },
+    "results": {
+      "via": "searches",
+      "collection": "result"
+    }
+  }
+}
